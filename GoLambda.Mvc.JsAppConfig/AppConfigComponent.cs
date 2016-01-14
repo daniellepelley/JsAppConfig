@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 
@@ -8,30 +9,40 @@ namespace TheLondonClinic.Mvc.JsAppConfig
 {
     public class AppConfigComponent
     {
-        private readonly IJsConfigCodeBuilder _jsConfigCodeBuilder;
-        private readonly IJsConfigReader _jsConfigReader;
-        private readonly Func<IDictionary<string, object>, Task> _appFunc;
+        private Dictionary<string, IJsConfigCodeBuilder> _dictionary = new Dictionary<string, IJsConfigCodeBuilder>();
 
-        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc)
-            : this(new JsConfigCodeBuilder(), new JsConfigReader())
+        protected readonly IJsConfigReader JsConfigReader;
+        protected readonly Func<IDictionary<string, object>, Task> AppFunc;
+
+        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc, IJsConfigCodeBuilder jsConfigCodeBuilder, IJsConfigReader jsConfigReader)
         {
-            _appFunc = appFunc;
+            AppFunc = appFunc;
+            JsConfigReader = jsConfigReader;
+            _dictionary.Add("/appconfig", jsConfigCodeBuilder);
         }
 
-        public AppConfigComponent(IJsConfigCodeBuilder jsConfigCodeBuilder, IJsConfigReader jsConfigReader)
+        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc)
+            : this(appFunc, new JsConfigCodeBuilder(), new JsConfigReader())
+        {}
+
+        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc, IEnumerable<JsConfigSetup> setups)
+            : this(appFunc, new JsConfigCodeBuilder(), new JsConfigReader())
         {
-            _jsConfigReader = jsConfigReader;
-            _jsConfigCodeBuilder = jsConfigCodeBuilder;
+            foreach (var setup in setups)
+            {
+                _dictionary.Add(setup.Url, setup.ConfigCodeBuilder);
+            }
         }
 
         public async Task Invoke(IDictionary<string, object> environment)
         {
             var owinContext = new OwinContext(environment);
+            var path = owinContext.Request.Path.Value;
 
-            if (!IsConfigRequest(owinContext) ||
+            if (!IsConfigRequest(path) ||
                 owinContext.Response.Body == null)
             {
-                await _appFunc.Invoke(environment);
+                await AppFunc.Invoke(environment);
             }
             else
             {
@@ -39,17 +50,25 @@ namespace TheLondonClinic.Mvc.JsAppConfig
 
                 using (var writer = new StreamWriter(owinContext.Response.Body))
                 {
-                    var dictionary = _jsConfigReader.Read();
-                    var javascript = _jsConfigCodeBuilder.Generate(dictionary);
+                    var dictionary = JsConfigReader.Read();
+                    var javascript = _dictionary[path.ToLower()].Generate(dictionary);
                     await writer.WriteAsync(javascript);
                 }
             }
         }
 
-        private static bool IsConfigRequest(OwinContext owinContext)
+        private bool IsConfigRequest(string path)
         {
-            var path = owinContext.Request.Path.Value;
-            return !string.IsNullOrEmpty(path) && path.ToLower() == "/appconfig";
+            return !string.IsNullOrEmpty(path) && _dictionary.ContainsKey(path.ToLower());
         }
+    }
+
+    public class AppConfigComponent<T>
+        : AppConfigComponent
+        where T : IJsConfigCodeBuilder
+    {
+        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc)
+            : base(appFunc, Activator.CreateInstance<T>(), new JsConfigReader())
+        { }
     }
 }

@@ -8,9 +8,9 @@ namespace TheLondonClinic.Mvc.JsAppConfig.Test
         [Test]
         public void GivenADictionaryOfConfigKeyPairsWhenGenerateIsCalledThenValidJavaScriptIsGenerated1()
         {
-            var expected = "var appConfig = function() { return { foo : 'bar' }; };";
+            var expected = @"var appConfig = function() { return { foo : ""bar"" }; };";
 
-            IJsConfigCodeBuilder jsConfigCodeBuilder = new JsConfigCodeBuilder();
+            var jsConfigCodeBuilder = new JsConfigCodeBuilder();
 
             var dictionary = new Dictionary<string, string>
             {
@@ -25,9 +25,9 @@ namespace TheLondonClinic.Mvc.JsAppConfig.Test
         [Test]
         public void GivenADictionaryOfConfigKeyPairsWhenGenerateIsCalledThenValidJavaScriptIsGenerated2()
         {
-            var expected = "var appConfig = function() { return { bar : 'foo' }; };";
+            var expected = @"var appConfig = function() { return { bar : ""foo"" }; };";
 
-            IJsConfigCodeBuilder jsConfigCodeBuilder = new JsConfigCodeBuilder();
+            var jsConfigCodeBuilder = new JsConfigCodeBuilder();
 
             var dictionary = new Dictionary<string, string>
             {
@@ -42,9 +42,9 @@ namespace TheLondonClinic.Mvc.JsAppConfig.Test
         [Test]
         public void GivenADictionaryOfConfigKeyPairsWhenGenerateIsCalledThenValidJavaScriptIsGenerated3()
         {
-            var expected = "var appConfig = function() { return { foo : 'bar', bar : 'foo' }; };";
+            var expected = @"var appConfig = function() { return { foo : ""bar"", bar : ""foo"" }; };";
 
-            IJsConfigCodeBuilder jsConfigCodeBuilder = new JsConfigCodeBuilder();
+            var jsConfigCodeBuilder = new JsConfigCodeBuilder();
 
             var dictionary = new Dictionary<string, string>
             {

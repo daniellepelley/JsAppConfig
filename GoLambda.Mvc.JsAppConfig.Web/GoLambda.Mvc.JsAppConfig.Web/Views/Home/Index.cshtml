@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h1>Test Config</h1>
+
+<div id="appConfig">
+    
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("#appConfig").html("foo: " + window.appConfig.foo);
+        });
+    </script>
+}
