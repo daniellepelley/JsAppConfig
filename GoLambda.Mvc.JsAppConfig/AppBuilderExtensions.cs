@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Owin;
 using Owin;
 
 namespace TheLondonClinic.Mvc.JsAppConfig
@@ -26,29 +25,23 @@ namespace TheLondonClinic.Mvc.JsAppConfig
             app.Use<AppConfigComponent>(setups);
         }
 
-        public static void UseJsAppConfig<T>(
-            this IAppBuilder app)
-            where T : IJsConfigCodeBuilder
-        {
-            app.Use<AppConfigComponent<T>>();
-        }
-    }
 
-    public class JsConfigSetup
-    {
-        public IJsConfigCodeBuilder ConfigCodeBuilder { get; private set; }
-        public string Url { get; private set; }
-
-        public JsConfigSetup WithPath(string url)
+        public static JsConfigSetup AsAngular1Service(this JsConfigSetup setup, string appName, string serviceName)
         {
-            Url = url;
-            return this;
+            setup.UsingCodeBuilder(new AngularJsConfigCodeBuilder(appName, serviceName));
+            return setup;
         }
 
-        public JsConfigSetup UsingCodeBuilder(IJsConfigCodeBuilder configCodeBuilder)
+        public static JsConfigSetup AsGlobalJs(this JsConfigSetup setup, string objectName)
         {
-            ConfigCodeBuilder = configCodeBuilder;
-            return this;
+            setup.UsingCodeBuilder(new GlobalJsConfigCodeBuilder(objectName));
+            return setup;
+        }
+
+        public static JsConfigSetup AsJQuery(this JsConfigSetup setup, string objectName)
+        {
+            setup.UsingCodeBuilder(new JQueryJsConfigCodeBuilder(objectName));
+            return setup;
         }
     }
 }

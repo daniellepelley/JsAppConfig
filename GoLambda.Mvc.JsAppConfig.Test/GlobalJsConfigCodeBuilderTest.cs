@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace TheLondonClinic.Mvc.JsAppConfig.Test
@@ -36,17 +35,6 @@ namespace TheLondonClinic.Mvc.JsAppConfig.Test
 
             var actual = jsConfigCodeBuilder.Generate(dictionary);
             Assert.AreEqual(expected, actual);
-        }
-    }
-
-    public static class Extensions
-    {
-        public static string NextLine(this string source, string nextLine)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(source);
-            stringBuilder.Append(nextLine);
-            return stringBuilder.ToString();
         }
     }
 }

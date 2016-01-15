@@ -9,25 +9,27 @@ namespace TheLondonClinic.Mvc.JsAppConfig
 {
     public class AppConfigComponent
     {
-        private Dictionary<string, IJsConfigCodeBuilder> _dictionary = new Dictionary<string, IJsConfigCodeBuilder>();
+        private readonly Dictionary<string, IJsConfigCodeBuilder> _dictionary = new Dictionary<string, IJsConfigCodeBuilder>();
 
         protected readonly IJsConfigReader JsConfigReader;
         protected readonly Func<IDictionary<string, object>, Task> AppFunc;
 
-        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc, IJsConfigCodeBuilder jsConfigCodeBuilder, IJsConfigReader jsConfigReader)
-        {
-            AppFunc = appFunc;
-            JsConfigReader = jsConfigReader;
-            _dictionary.Add("/appconfig", jsConfigCodeBuilder);
-        }
+        //public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc, IJsConfigCodeBuilder jsConfigCodeBuilder, IJsConfigReader jsConfigReader)
+        //{
+        //    AppFunc = appFunc;
+        //    JsConfigReader = jsConfigReader;
+        //    _dictionary.Add("/appconfig", jsConfigCodeBuilder);
+        //}
 
-        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc)
-            : this(appFunc, new JsConfigCodeBuilder(), new JsConfigReader())
-        {}
+        //public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc)
+        //    : this(appFunc, new JsConfigCodeBuilder(), new JsConfigReader())
+        //{}
 
         public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc, IEnumerable<JsConfigSetup> setups)
-            : this(appFunc, new JsConfigCodeBuilder(), new JsConfigReader())
         {
+            AppFunc = appFunc;
+            JsConfigReader = new JsConfigReader();
+
             foreach (var setup in setups)
             {
                 _dictionary.Add(setup.Url, setup.ConfigCodeBuilder);
@@ -61,14 +63,5 @@ namespace TheLondonClinic.Mvc.JsAppConfig
         {
             return !string.IsNullOrEmpty(path) && _dictionary.ContainsKey(path.ToLower());
         }
-    }
-
-    public class AppConfigComponent<T>
-        : AppConfigComponent
-        where T : IJsConfigCodeBuilder
-    {
-        public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc)
-            : base(appFunc, Activator.CreateInstance<T>(), new JsConfigReader())
-        { }
     }
 }

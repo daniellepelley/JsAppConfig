@@ -10,19 +10,13 @@ namespace GoLambda.Mvc.JsAppConfig.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseJsAppConfig(x => x
-                .WithPath("/angular")
-                .UsingCodeBuilder(new AngularJsConfigCodeBuilder("app", "configService")),
+            app.UseJsAppConfig(
                 x => x
-                .WithPath("/global")
-                .UsingCodeBuilder(new GlobalJsConfigCodeBuilder("config")),
+                    .WithPath("/angular").AsAngular1Service("app", "configService"),
                 x => x
-                .WithPath("/function")
-                .UsingCodeBuilder(new JsConfigCodeBuilder()),
+                    .WithPath("/global").AsGlobalJs("config"),
                 x => x
-                .WithPath("/jquery")
-                .UsingCodeBuilder(new JQueryJsConfigCodeBuilder("config"))
-                );
+                    .WithPath("/jquery").AsJQuery("config"));
         }
     }
 }

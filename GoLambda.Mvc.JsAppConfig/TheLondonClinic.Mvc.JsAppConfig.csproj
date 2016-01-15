@@ -61,6 +61,7 @@
     <Compile Include="JQueryJsConfigCodeBuilder.cs" />
     <Compile Include="JsConfigCodeBuilder.cs" />
     <Compile Include="JsConfigReader.cs" />
+    <Compile Include="JsConfigSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
