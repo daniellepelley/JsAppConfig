@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+<h1>Angular</h1>
+
+<div ng-app="app" ng-controller="configCtrl">
+    foo: {{foo}}
+</div>
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.js"></script>
+
+<script>
+    angular.module("app", [])
+</script>
+
+    @Scripts.Render("/angular")
+
+    <script>
+    angular.module("app").controller("configCtrl", function ($scope, configService) {
+        $scope.foo = configService.foo;
+    });
+</script>
+
+}
