@@ -58,6 +58,7 @@
     <Compile Include="GlobalJsConfigCodeBuilder.cs" />
     <Compile Include="IJsConfigCodeBuilder.cs" />
     <Compile Include="IJsConfigReader.cs" />
+    <Compile Include="JQueryJsConfigCodeBuilder.cs" />
     <Compile Include="JsConfigCodeBuilder.cs" />
     <Compile Include="JsConfigReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
