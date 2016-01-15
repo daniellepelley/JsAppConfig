@@ -7,7 +7,7 @@ namespace TheLondonClinic.Mvc.JsAppConfig.Test
         [Test]
         public void GivenAConfigWithJsConfigWhenReadIsCalledThenTheJsConfigKeysAreRead()
         {
-            IJsConfigReader jsConfigReader = new JsConfigReader();
+            IJsConfigReader jsConfigReader = new AppSettingsJsConfigReader();
             var dictionary = jsConfigReader.Read();
             Assert.AreEqual("bar", dictionary["foo"]);
         }

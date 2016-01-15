@@ -17,18 +17,18 @@ namespace TheLondonClinic.Mvc.JsAppConfig
         //public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc, IJsConfigCodeBuilder jsConfigCodeBuilder, IJsConfigReader jsConfigReader)
         //{
         //    AppFunc = appFunc;
-        //    JsConfigReader = jsConfigReader;
+        //    AppSettingsJsConfigReader = jsConfigReader;
         //    _dictionary.Add("/appconfig", jsConfigCodeBuilder);
         //}
 
         //public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc)
-        //    : this(appFunc, new JsConfigCodeBuilder(), new JsConfigReader())
+        //    : this(appFunc, new JsConfigCodeBuilder(), new AppSettingsJsConfigReader())
         //{}
 
         public AppConfigComponent(Func<IDictionary<string, object>, Task> appFunc, IEnumerable<JsConfigSetup> setups)
         {
             AppFunc = appFunc;
-            JsConfigReader = new JsConfigReader();
+            JsConfigReader = new AppSettingsJsConfigReader();
 
             foreach (var setup in setups)
             {
